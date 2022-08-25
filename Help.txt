@@ -1,0 +1,107 @@
+https://reflectoring.io/java-mapping-with-mapstruct/
+https://github.com/thombergs/code-examples/tree/master/mapstruct
+
+https://stackabuse.com/guide-to-mapstruct-in-java-advanced-mapping-library/
+
+https://github.com/mapstruct/mapstruct-examples/blob/main/mapstruct-lombok/src/main/java/com/mycompany/mapper/SourceTargetMapper.java
+
+https://medium.com/javarevisited/make-your-life-easier-with-mapstruct-lombok-14225f207191
+
+https://github.com/Milena92/mapstruct-lombok-demo/blob/main/src/main/java/com/milena/mapstructlombokdemo/mapper/AddressMapper.java
+
+
+
+Issue:
+Builder not available to other Annotation Processors
+https://github.com/projectlombok/lombok/issues/1538
+@AfterMapping not called for target beans with builder #1862
+https://github.com/mapstruct/mapstruct/issues/1862
+Clarify documentation about builders and lifecycle @AfterMapping / @BeforeMapping methods
+https://github.com/mapstruct/mapstruct/issues/2719
+
+Solution :
+
+1) Disable @Builder
+#####################################################################
+---------
+@Mapper(builder = @Builder(disableBuilder = true))
+public interface EntityToDtoMapper {
+-------------
+@BeforeMapping
+default void enrichOrganizationName(Department source, @MappingTarget DepartmentDto target) {
+  target.setOrganizationName(source.getName().toLowerCase(Locale.ROOT));
+  System.out.println("Before Mapping:"+target);
+}
+----------
+@AfterMapping
+default void enrichOrganizationNameWithSuffix(Department source, @MappingTarget DepartmentDto target) {
+  target.setOrganizationName(source.getName().toLowerCase(Locale.ROOT)+"_DEPT");
+  System.out.println("After Mapping:"+target);
+}
+--------------
+Generated Impl:
+--------------
+@Override
+  public DepartmentDto toDto(Department source) {
+      if ( source == null ) {
+          return null;
+      }
+
+      DepartmentDto departmentDto = new DepartmentDto();
+
+      enrichOrganizationName( source, departmentDto );
+
+      Set<Employee> set = source.getEmployees();
+      if ( set != null ) {
+          departmentDto.setEmployeeName( new LinkedHashSet<Employee>( set ) );
+      }
+      departmentDto.setOrganizationName( sourceOrganizationName1( source ) );
+      departmentDto.setName( source.getName() );
+
+      enrichOrganizationNameWithSuffix( source, departmentDto );
+
+      return departmentDto;
+  }
+
+
+#############################################################################################
+2) @AfterMapping/@BeforeMapping annotated method must have the builder as @MappingTarget annotated parameter
+#####################################################################
+@Mapper
+public interface EntityToDtoMapper {
+
+@BeforeMapping
+default void enrichOrganizationName(Department source, @MappingTarget DepartmentDto.DepartmentDtoBuilder target) {
+  target.organizationName(source.getName().toLowerCase(Locale.ROOT));
+  System.out.println("Before Mapping:"+target);
+}
+
+@AfterMapping
+default void enrichOrganizationNameWithSuffix(Department source, @MappingTarget DepartmentDto.DepartmentDtoBuilder target) {
+  target.organizationName(source.getName().toLowerCase(Locale.ROOT)+"_DEPT");
+  System.out.println("After Mapping:"+target);
+}
+--------------
+Generated Impl:
+--------------
+@Override
+    public DepartmentDto toDto(Department source) {
+        if ( source == null ) {
+            return null;
+        }
+
+        DepartmentDto.DepartmentDtoBuilder departmentDto = DepartmentDto.builder();
+
+        enrichOrganizationName( source, departmentDto );
+
+        Set<Employee> set = source.getEmployees();
+        if ( set != null ) {
+            departmentDto.employeeName( new LinkedHashSet<Employee>( set ) );
+        }
+        departmentDto.organizationName( sourceOrganizationName1( source ) );
+        departmentDto.name( source.getName() );
+
+        enrichOrganizationNameWithSuffix( source, departmentDto );
+
+        return departmentDto.build();
+    }
