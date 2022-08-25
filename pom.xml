@@ -25,11 +25,6 @@
       <artifactId>lombok</artifactId>
       <version>${lombok.version}</version>
     </dependency>
-    <!--<dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <optional>true</optional>
-    </dependency>-->
     <!-- IntelliJ pre 2018.1.1 requires the mapstruct processor to be present as provided dependency -->
     <dependency>
       <groupId>org.mapstruct</groupId>
@@ -42,23 +37,6 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mapstruct</groupId>
-      <artifactId>mapstruct</artifactId>
-      <version>${org.mapstruct.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mapstruct</groupId>
-      <artifactId>mapstruct-processor</artifactId>
-      <version>${org.mapstruct.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok-mapstruct-binding</artifactId>
-      <version>	0.2.0</version>
     </dependency>
 
   </dependencies>
@@ -85,17 +63,16 @@
               <artifactId>mapstruct-processor</artifactId>
               <version>${org.mapstruct.version}</version>
             </path>
-
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
             <!-- additional annotation processor required as of Lombok 1.18.16 -->
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok-mapstruct-binding</artifactId>
               <version>0.2.0</version>
-            </path>
-            <path>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok</artifactId>
-              <version>${lombok.version}</version>
             </path>
           </annotationProcessorPaths>
           <!-- due to problem in maven-compiler-plugin, for verbose mode add showWarnings -->
