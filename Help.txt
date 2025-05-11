@@ -1,3 +1,14 @@
+
+https://gemini.google.com/app/6296525182a9e7c0
+
+
+https://reflectoring.io/java-mapping-with-mapstruct/
+
+https://docs.google.com/document/d/1va_nW4pbLAdxTCLbbjgPKEtqvxiSBUS2xXo7_7CWIjg/edit?tab=t.0
+
+
+
+---------------
 https://reflectoring.io/java-mapping-with-mapstruct/
 https://github.com/thombergs/code-examples/tree/master/mapstruct
 
